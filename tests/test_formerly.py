@@ -282,6 +282,12 @@ class TestClassContract:
         assert OldName.__name__ == "OldName"
         assert OldName.__module__ == "tests.test_formerly"
 
+    def test_name_without_stack_frame_support(self, monkeypatch):
+        monkeypatch.setattr(inspect, "currentframe", lambda: None)
+        Deprecated = deprecated_class("Deprecated", NewName)
+        assert Deprecated.__name__ == "Deprecated"
+        assert Deprecated.__module__ == "formerly"
+
     def test_mro(self):
         assert OldName.__mro__[1:] == (NewName, SomeBaseClass, object)
 
