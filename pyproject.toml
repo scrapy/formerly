@@ -35,6 +35,7 @@ requires-python = ">=3.10"
 
 [project.urls]
 Homepage = "https://github.com/scrapy/formerly"
+Changelog = "https://github.com/scrapy/formerly/blob/main/CHANGELOG.rst"
 Source = "https://github.com/scrapy/formerly"
 Tracker = "https://github.com/scrapy/formerly/issues"
 
@@ -42,6 +43,7 @@ Tracker = "https://github.com/scrapy/formerly/issues"
 include = [
     "/formerly",
     "/tests",
+    "/CHANGELOG.rst",
     "/codecov.yml",
     "/tox.ini",
 ]
@@ -51,6 +53,12 @@ current_version = "0.0.0"
 commit = true
 tag = true
 tag_name = "{new_version}"
+
+[[tool.bumpversion.files]]
+filename = "CHANGELOG.rst"
+search = "\\(unreleased\\)$"
+replace = "({now:%Y-%m-%d})"
+regex = true
 
 [tool.coverage.run]
 branch = true
