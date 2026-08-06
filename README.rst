@@ -4,11 +4,11 @@ formerly
 
 |version| |python_version| |tests| |coverage|
 
-.. |version| image:: https://img.shields.io/pypi/v/formerly.svg
+.. |version| image:: https://img.shields.io/pypi/v/formerly
    :target: https://pypi.org/pypi/formerly
    :alt: PyPI Version
 
-.. |python_version| image:: https://img.shields.io/pypi/pyversions/formerly.svg
+.. |python_version| image:: https://img.shields.io/pypi/pyversions/formerly
    :target: https://pypi.org/pypi/formerly
    :alt: Supported Python Versions
 
@@ -16,7 +16,7 @@ formerly
    :target: https://github.com/scrapy/formerly/actions?query=branch%3Amain
    :alt: Tests
 
-.. |coverage| image:: https://img.shields.io/codecov/c/github/scrapy/formerly/main.svg
+.. |coverage| image:: https://img.shields.io/codecov/c/github/scrapy/formerly/main
    :target: https://codecov.io/github/scrapy/formerly?branch=main
    :alt: Coverage report
 
