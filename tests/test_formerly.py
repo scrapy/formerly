@@ -94,6 +94,39 @@ class TestSubclassing:
         ):
             Deprecated()
 
+    @pytest.mark.parametrize(
+        ("new_path", "suggest_new", "suggested"),
+        [
+            (None, None, False),
+            ("foo._bar.Baz", None, False),
+            ("__main__.Baz", None, True),
+            ("foo.Baz", None, True),
+            (None, True, True),
+            ("foo.Baz", False, False),
+        ],
+    )
+    def test_suggest_new(self, new_path, suggest_new, suggested):
+        class _Private(NewName):
+            pass
+
+        Deprecated: Any = deprecated_class(
+            "Deprecated",
+            _Private,
+            new_path=new_path,
+            suggest_new=suggest_new,
+            category=MyWarning,
+        )
+
+        with pytest.warns(MyWarning) as record:
+
+            class UserClass(Deprecated):
+                pass
+
+            Deprecated()
+
+        new = new_path or "_Private"
+        assert [new in str(r.message) for r in record] == [suggested] * 2
+
     def test_only_direct_subclasses_warn(self):
         Deprecated: Any = deprecated_class(
             "Deprecated", NewName, warn_once=False, category=MyWarning

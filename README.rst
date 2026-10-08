@@ -77,6 +77,10 @@ involved. Both are configurable, along with the messages themselves:
         subclass_message="{cls} inherits from {old}, which is going away in 3.0.",
     )
 
+Messages only tell users to switch to the new class when its path, or
+``new_path`` if given, has no ``_``-prefixed part. Pass ``suggest_new=True`` or
+``suggest_new=False`` to decide that yourself.
+
 By default only the first subclass warns, since one warning is enough to tell
 users to migrate. Pass ``warn_once=False`` to warn on every subclass.
 
