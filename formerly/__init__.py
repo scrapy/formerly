@@ -18,10 +18,9 @@ def deprecated_class(
     warn_once: bool = True,
     old_path: str | None = None,
     new_path: str | None = None,
-    subclass_message: str = (
-        "{cls} inherits from deprecated class {old}, please inherit from {new}."
-    ),
-    instance_message: str = "{cls} is deprecated, instantiate {new} instead.",
+    suggest_new: bool | None = None,
+    subclass_message: str | None = None,
+    instance_message: str | None = None,
 ) -> type[_T]:
     """Return a deprecated alias of *new_class* named *name*.
 
@@ -44,6 +43,10 @@ def deprecated_class(
     warning messages report, which is useful when either class is reexported
     from a different module.
 
+    The warning messages tell users to use *new_class* instead, unless its
+    path, or *new_path* if given, has a ``_``-prefixed part. Set
+    *suggest_new* to ``True`` or ``False`` to decide that yourself.
+
     *subclass_message* and *instance_message* replace the warning messages.
     Both may use the ``{cls}``, ``{old}`` and ``{new}`` fields, filled with
     the path of the subclass or instantiated class, of the alias, and of
@@ -52,6 +55,16 @@ def deprecated_class(
     Set *warn_once* to ``False`` to warn on every subclass instead of only on
     the first one.
     """
+    if suggest_new is None:
+        suggest_new = not _is_private(new_path or _path(new_class))
+    subclass_template = subclass_message or (
+        "{cls} inherits from deprecated class {old}"
+        + (", please inherit from {new}." if suggest_new else ".")
+    )
+    instance_template = instance_message or (
+        "{cls} is deprecated" + (", instantiate {new} instead." if suggest_new else ".")
+    )
+
     alias: type[_T] | None = None
     warned = False
 
@@ -75,7 +88,7 @@ def deprecated_class(
             ):
                 assert alias is not None
                 warned = True
-                message = subclass_message.format(
+                message = subclass_template.format(
                     cls=_path(cls),
                     old=old_path or _path(alias),
                     new=new_path or _path(new_class),
@@ -89,7 +102,7 @@ def deprecated_class(
             if cls is alias:
                 assert alias is not None
                 warnings.warn(
-                    instance_message.format(
+                    instance_template.format(
                         cls=old_path or _path(alias),
                         new=new_path or _path(new_class),
                     ),
@@ -126,3 +139,9 @@ def deprecated_class(
 
 def _path(cls: type) -> str:
     return f"{cls.__module__}.{cls.__name__}"
+
+
+def _is_private(path: str) -> bool:
+    return any(
+        part.startswith("_") and not part.endswith("__") for part in path.split(".")
+    )
