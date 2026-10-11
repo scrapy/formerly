@@ -49,6 +49,10 @@ jobs:
           env:
             TOXENV: pypy3
           coverage: true
+        - python-version: "pypy3.12"
+          env:
+            TOXENV: pypy3
+          coverage: true
         - python-version: "3.11"
           env:
             TOXENV: mypy
